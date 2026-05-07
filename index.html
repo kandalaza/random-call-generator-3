@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Генератор случайных вызовов</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="hero">
+        <div>
+          <p class="eyebrow">Интерактивная система саморазвития</p>
+          <h1>Генератор случайных вызовов</h1>
+          <p id="welcome-message" class="hero-text">
+            Загрузите профиль, настройте фильтры и получите квесты на сегодня.
+          </p>
+        </div>
+        <div class="hero-stats">
+          <article class="stat-card">
+            <span class="stat-label">Текущая серия</span>
+            <strong id="header-streak">0</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">% выполнено</span>
+            <strong id="header-percent">0%</strong>
+          </article>
+          <article class="stat-card">
+            <span class="stat-label">Награды</span>
+            <strong id="header-rewards">0</strong>
+          </article>
+        </div>
+      </header>
+
+      <nav class="tab-nav" aria-label="Навигация по разделам">
+        <button class="tab-button active" data-screen="home">Главный экран</button>
+        <button class="tab-button" data-screen="settings">Настройки</button>
+        <button class="tab-button" data-screen="profile">Профиль</button>
+        <button class="tab-button" data-screen="history">История</button>
+      </nav>
+
+      <main>
+        <section id="screen-home" class="screen active">
+          <div class="panel panel-accent">
+            <div>
+              <h2>Квесты на сегодня</h2>
+              <p class="panel-text">
+                Система подбирает от 1 до 3 заданий по выбранной сложности и категориям.
+              </p>
+            </div>
+            <button id="generate-quests-button" class="primary-button">
+              Получить квест
+            </button>
+          </div>
+
+          <p id="daily-note" class="helper-text">
+            Нажмите кнопку, чтобы сформировать новый набор квестов.
+          </p>
+
+          <div id="quest-list" class="quest-grid"></div>
+        </section>
+
+        <section id="screen-settings" class="screen">
+          <div class="panel">
+            <h2>Настройки генерации</h2>
+            <p class="panel-text">
+              Выберите сложность и категории. После сохранения можно получить новый набор квестов.
+            </p>
+
+            <form id="settings-form" class="stack-form">
+              <label class="field">
+                <span>Уровень сложности</span>
+                <select id="difficulty-select">
+                  <option value="easy">Лёгкий</option>
+                  <option value="medium">Средний</option>
+                  <option value="hard">Сложный</option>
+                </select>
+              </label>
+
+              <fieldset class="field">
+                <legend>Категории</legend>
+                <div id="category-filters" class="checkbox-grid"></div>
+              </fieldset>
+
+              <button type="submit" class="primary-button">Сохранить настройки</button>
+            </form>
+          </div>
+        </section>
+
+        <section id="screen-profile" class="screen">
+          <div class="panel">
+            <div class="profile-header">
+              <div>
+                <h2>Профиль пользователя</h2>
+                <p class="panel-text">
+                  Данные профиля сохраняются в браузере через localStorage.
+                </p>
+              </div>
+
+              <form id="profile-form" class="inline-form">
+                <label class="field grow-field">
+                  <span>Имя</span>
+                  <input
+                    id="profile-name-input"
+                    type="text"
+                    maxlength="30"
+                    placeholder="Введите имя"
+                  />
+                </label>
+                <button type="submit" class="secondary-button">Сохранить имя</button>
+              </form>
+            </div>
+
+            <div class="stats-grid">
+              <article class="info-card">
+                <span class="info-label">Дата регистрации</span>
+                <strong id="profile-date">—</strong>
+              </article>
+              <article class="info-card">
+                <span class="info-label">Текущий уровень</span>
+                <strong id="profile-level">—</strong>
+              </article>
+              <article class="info-card">
+                <span class="info-label">Текущая серия</span>
+                <strong id="profile-streak">0</strong>
+              </article>
+              <article class="info-card">
+                <span class="info-label">Награды</span>
+                <strong id="profile-reward-count">0</strong>
+              </article>
+              <article class="info-card">
+                <span class="info-label">Выполнено квестов</span>
+                <strong id="profile-completed-count">0</strong>
+              </article>
+              <article class="info-card">
+                <span class="info-label">% выполнения</span>
+                <strong id="profile-percent">0%</strong>
+              </article>
+            </div>
+
+            <div class="reward-panel">
+              <div class="section-heading">
+                <h3>Награды и достижения</h3>
+                <span id="reward-summary" class="helper-badge">0 достижений</span>
+              </div>
+              <div id="reward-list" class="reward-list"></div>
+            </div>
+          </div>
+        </section>
+
+        <section id="screen-history" class="screen">
+          <div class="panel">
+            <div class="history-toolbar">
+              <div>
+                <h2>История квестов</h2>
+                <p class="panel-text">
+                  Здесь отображаются все созданные задания, их статус и дата обновления.
+                </p>
+              </div>
+
+              <label class="field compact-field">
+                <span>Фильтр по статусу</span>
+                <select id="history-filter">
+                  <option value="all">Все</option>
+                  <option value="completed">Выполненные</option>
+                  <option value="pending">Ожидают</option>
+                  <option value="skipped">Пропущенные</option>
+                </select>
+              </label>
+            </div>
+
+            <div class="table-wrapper">
+              <table class="history-table">
+                <thead>
+                  <tr>
+                    <th>Название</th>
+                    <th>Сложность</th>
+                    <th>Категория</th>
+                    <th>Статус</th>
+                    <th>Дата выполнения</th>
+                  </tr>
+                </thead>
+                <tbody id="history-table-body"></tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div id="toast" class="toast" aria-live="polite"></div>
+
+    <script src="js/data/quests.js"></script>
+    <script src="js/modules/storage.js"></script>
+    <script src="js/modules/profile.js"></script>
+    <script src="js/modules/quest-service.js"></script>
+    <script src="js/modules/ui.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+  </html>
